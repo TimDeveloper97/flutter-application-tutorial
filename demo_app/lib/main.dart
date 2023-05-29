@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'gradient_container.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -27,41 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment(0.8, 1),
-                colors: [
-                  Color(0xff1f005c),
-                  Color(0xff5b0060),
-                  Color(0xff870160),
-                  Color(0xffac255e),
-                  Color(0xffca485c),
-                  Color(0xffe16b5c),
-                  Color(0xfff39060),
-                  Color(0xffffb56b),
-                ], // Gradient from https://learnui.design/tools/gradient-generator.html
-                tileMode: TileMode.mirror,
-              ),
-              color: const Color(0xff7c94b6),
-              // image: const DecorationImage(
-              //   image: NetworkImage(
-              //       'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-              //   fit: BoxFit.cover,
-              // ),
-              border: Border.all(
-                width: 8,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            alignment: Alignment.bottomRight,
-            // child: const Center(
-            //   child: Text("Hello world"),
-            // ),
-            child: Text("Hello world"),
-          ),
-          backgroundColor: Colors.blueAccent),
+          body: GradientContainer(), backgroundColor: Colors.blueAccent),
     );
   }
 }
@@ -150,3 +118,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
