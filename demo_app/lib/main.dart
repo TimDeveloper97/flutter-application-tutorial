@@ -28,8 +28,17 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: Scaffold(
-          body: GradientContainer(), backgroundColor: Colors.blueAccent),
+      home: const Scaffold(
+          body: GradientContainer(colors: [
+            Color.fromARGB(255, 12, 11, 12),
+            Color(0xff5b0060),
+            Color(0xff870160),
+            Color(0xffac255e),
+            Color(0xffca485c),
+            Color(0xffe16b5c),
+            Color(0xfff39060),
+            Color(0xffffb56b),
+          ]), backgroundColor: Colors.blueAccent),
     );
   }
 }

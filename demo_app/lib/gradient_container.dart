@@ -1,13 +1,20 @@
+import 'package:demo_app/dice_roller.dart';
 import 'package:demo_app/style_text.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-var startAlignment = Alignment.bottomRight;
-var bottomAlignment = Alignment.centerRight;
+const startAlignment = Alignment.topLeft;
+const bottomAlignment = Alignment.centerRight;
 
 class GradientContainer extends StatelessWidget {
-  GradientContainer({Key? key}) : super(key: key) {
-    var x = 10;
-  }
+  const GradientContainer({Key? key, required this.colors}) : super(key: key);
+  // const GradientContainer(this.colors, {Key? key}) : super(key: key);
+  GradientContainer.purple()
+      : colors = [
+          Color.fromARGB(255, 12, 11, 12),
+          Color(0xff5b0060),
+          Color(0xff870160),
+        ];
+  final List<Color> colors;
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +25,8 @@ class GradientContainer extends StatelessWidget {
           begin: startAlignment,
           // end: Alignment(0.8, 1),
           end: bottomAlignment,
-          colors: const [
-            Color.fromARGB(255, 12, 11, 12),
-            Color(0xff5b0060),
-            Color(0xff870160),
-            Color(0xffac255e),
-            Color(0xffca485c),
-            Color(0xffe16b5c),
-            Color(0xfff39060),
-            Color(0xffffb56b),
-          ], // Gradient from https://learnui.design/tools/gradient-generator.html
+          colors:
+              colors, // Gradient from https://learnui.design/tools/gradient-generator.html
           tileMode: TileMode.mirror,
         ),
         color: const Color(0xff7c94b6),
@@ -41,11 +40,13 @@ class GradientContainer extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(5),
       ),
-      alignment: bottomAlignment,
+      alignment: Alignment.center,
       // child: const Center(
       //   child: Text("Hello world"),
       // ),
-      child: const StyleText(),
+      // child: const StyleText('Hello world'),
+      padding: const EdgeInsets.only(left: 50, right: 50),
+      child: DiceRoller(),
     );
   }
 }
