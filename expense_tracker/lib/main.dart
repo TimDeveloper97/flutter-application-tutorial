@@ -1,8 +1,12 @@
 import 'package:expense_tracker/widgets/expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  //lock rolate device
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => {runApp(const MyApp())});
 }
 
 var kColorScheme = ColorScheme.fromSeed(seedColor: Colors.amber);
@@ -30,10 +34,23 @@ class MyApp extends StatelessWidget {
               backgroundColor: kDarkColorScheme.primaryContainer),
         ),
         textTheme: ThemeData().textTheme.copyWith(
-            titleLarge: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: kDarkColorScheme.primary,
-                fontSize: 18)),
+              titleLarge: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: kDarkColorScheme.onSecondaryContainer,
+                  fontSize: 18),
+              bodyMedium: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: kDarkColorScheme.onSecondaryContainer,
+                  fontSize: 14),
+              bodySmall: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: kDarkColorScheme.onSecondaryContainer,
+                  fontSize: 12),
+              titleMedium: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: kDarkColorScheme.onSecondaryContainer,
+                  fontSize: 14),
+            ),
       ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
