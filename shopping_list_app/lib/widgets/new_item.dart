@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shopping_list_app/models/grocery_item.dart';
@@ -44,11 +43,18 @@ class _NewItemState extends State<NewItem> {
           },
         ),
       );
-      // .then((value) => {
-      //       //do something
-      //     });
 
-      if (!context.mounted) return;
+      //non push back data
+      if (context.mounted) {
+        final Map<String, dynamic> resData = json.decode(response.body);
+        Navigator.of(context).pop(
+          GroceryItem(
+              id: resData['name'],
+              name: _enteredName,
+              quantity: _enteredQuantity,
+              category: _selectedCategory),
+        );
+      }
 
       //push back data
       // Navigator.of(context).pop(GroceryItem(
@@ -56,16 +62,6 @@ class _NewItemState extends State<NewItem> {
       //     name: _enteredName,
       //     quantity: _enteredQuantity,
       //     category: _selectedCategory));
-
-      //non push back data
-      final Map<String, dynamic> resData = json.decode(response.body);
-      Navigator.of(context).pop(
-        GroceryItem(
-            id: resData['name'],
-            name: _enteredName,
-            quantity: _enteredQuantity,
-            category: _selectedCategory),
-      );
     }
   }
 
@@ -73,7 +69,7 @@ class _NewItemState extends State<NewItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add a new item'),
+        title: const Text('Add a new item'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -149,9 +145,6 @@ class _NewItemState extends State<NewItem> {
                                   Text(category.value.title),
                                 ],
                               ),
-                              onTap: () {
-                                print('tap');
-                              },
                             ),
                         ],
                         onChanged: (value) {
