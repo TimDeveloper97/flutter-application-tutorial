@@ -7,8 +7,8 @@ import '../models/place.dart';
 class UserPlaceNotifier extends StateNotifier<List<Place>> {
   UserPlaceNotifier() : super(const []);
 
-  void addPlace(String title, File image) {
-    final newPlace = Place(title, image);
+  void addPlace(String title, File image, PlaceLocation location) {
+    final newPlace = Place(title, image, location);
     state = [newPlace, ...state];
   }
 }
