@@ -1,7 +1,10 @@
+import 'package:favorite_places/screens/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final colorScheme = ColorScheme.fromSeed(
@@ -11,7 +14,29 @@ final colorScheme = ColorScheme.fromSeed(
 );
 
 final theme = ThemeData().copyWith(
-    useMaterial3: true, scaffoldBackgroundColor: colorScheme.background);
+    useMaterial3: true,
+    scaffoldBackgroundColor: colorScheme.background,
+    colorScheme: colorScheme,
+    textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
+      titleSmall: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      titleMedium: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      titleLarge: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      bodyLarge: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      bodyMedium: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      bodySmall: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      headlineLarge: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      headlineMedium: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+      headlineSmall: GoogleFonts.ubuntuCondensed(
+          fontWeight: FontWeight.bold, color: Colors.white),
+    ));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,12 +44,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Container(),
+      title: 'Great Places',
+      theme: theme,
+      debugShowCheckedModeBanner: false,
+      home: const PlacesScreen(),
     );
   }
 }
