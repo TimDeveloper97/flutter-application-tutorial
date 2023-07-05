@@ -1,5 +1,7 @@
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/screens/map.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,6 +35,20 @@ class _LocationInputState extends State<LocationInput> {
 
   String _getApi(double? lat, double? lng) {
     return 'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$YOUR_API_KEY';
+  }
+
+  Future<void> _savePlace(double lat, double lng) async {
+    final url = Uri.parse(_getApi(lat, lng));
+    final response = await http.get(url);
+    final resData = json.decode(response.body);
+    final address = resData['results'][0]['formatted_address'];
+
+    setState(() {
+      _isGettingLocation = false;
+      _pickedLocation = PlaceLocation(lat, lng, address);
+    });
+
+    widget.onSelectedLocation(_pickedLocation!);
   }
 
   void _getCurrentLocation() async {
@@ -70,20 +86,24 @@ class _LocationInputState extends State<LocationInput> {
     final lng = locationData.longitude;
 
     if (lat == null || lng == null) return;
+    _savePlace(lat, lng);
 
-    final url = Uri.parse(_getApi(lat, lng));
-    final response = await http.get(url);
-    final resData = json.decode(response.body);
-    final address = resData['results'][0]['formatted_address'];
-
-    setState(() {
-      _isGettingLocation = false;
-      _pickedLocation = PlaceLocation(lat, lng, address);
-    });
-
-    widget.onSelectedLocation(_pickedLocation!);
     print(locationData.latitude);
     print(locationData.longitude);
+  }
+
+  void _selectedOnMap() async {
+    final position = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (context) => MapsScreen(),
+      ),
+    );
+
+    if (position == null) {
+      return;
+    }
+
+    _savePlace(position.latitude, position.longitude);
   }
 
   @override
@@ -135,7 +155,7 @@ class _LocationInputState extends State<LocationInput> {
               label: const Text('Get Current Location'),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectedOnMap,
               icon: const Icon(Icons.map),
               label: const Text('Get Current Map'),
             ),
