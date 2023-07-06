@@ -18,5 +18,5 @@ class Place {
   final File image;
   final PlaceLocation location;
 
-  Place(this.title, this.image, this.location) : id = uuid.v4();
+  Place(this.title, this.image, this.location, id) : id = id ?? uuid.v4();
 }

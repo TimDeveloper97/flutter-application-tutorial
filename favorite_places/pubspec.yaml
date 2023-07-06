@@ -44,7 +44,7 @@ dependencies:
   google_maps_flutter: ^2.3.1 # picked google maps
   path_provider: ^2.0.15 # locations on the filesystem
   path: ^1.8.3 # manipulating paths: joining, splitting, normalizing, etc.
-  sqflite: ^2.2.8+4
+  sqflite: ^2.2.8+4 # database
 
 dev_dependencies:
   flutter_test:
