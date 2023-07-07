@@ -16,6 +16,14 @@ FlutterWindow::FlutterWindow(const flutter::DartProject& project)
 
 FlutterWindow::~FlutterWindow() {}
 
+static int getBatteryLevel() {
+    SYSTEM_POWER_STATUS status;
+    if (GetSystemPowerStatus(&status) == 0 || status.BatteryLifePercent == 255) {
+        return -1;
+    }
+    return status.BatteryLifePercent;
+}
+
 bool FlutterWindow::OnCreate() {
   if (!Win32Window::OnCreate()) {
     return false;
@@ -47,27 +55,19 @@ bool FlutterWindow::OnCreate() {
         // TODO
 
         if (call.method_name() == "getBatteryLevel") {
-        int battery_level = GetBatteryLevel();
-        if (battery_level != -1) {
-          result->Success(battery_level);
-        } else {
-          result->Error("UNAVAILABLE", "Battery level not available.");
-        }
-        } else {
-          result->NotImplemented();
-        }
-      });
+            int battery_level = getBatteryLevel();
+            if (battery_level != -1) {
+              result->Success(battery_level);
+            } else {
+              result->Error("UNAVAILABLE", "Battery level not available.");
+            }
+            } else {
+              result->NotImplemented();
+            }
+        });
 
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
   return true;
-}
-
-static int GetBatteryLevel() {
-  SYSTEM_POWER_STATUS status;
-  if (GetSystemPowerStatus(&status) == 0 || status.BatteryLifePercent == 255) {
-    return -1;
-  }
-  return status.BatteryLifePercent;
 }
 
 void FlutterWindow::OnDestroy() {

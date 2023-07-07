@@ -18,7 +18,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
   Future<void> _getBatteryLevel() async {
     String batteryLevel;
     try {
-      final int result = await platform.invokeMethod('getBattryLevel');
+      final int result = await platform.invokeMethod('getBatteryLevel');
       batteryLevel = 'Battery level at $result %.';
     } on PlatformException catch (e) {
       batteryLevel = "Failed to get battery level: '${e.message}'.";
