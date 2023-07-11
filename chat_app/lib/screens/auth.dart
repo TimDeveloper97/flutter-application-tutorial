@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,9 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true;
-  var _enteredEmail = 'test@gmail.com';
-  var _enteredPassword = '123456';
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+  var _enteredUsername = '';
   final _form = GlobalKey<FormState>();
   var _isAuthenticating = false;
   File? _selectedImage = File('https://picsum.photos/250?image=9');
@@ -54,8 +56,18 @@ class _AuthScreenState extends State<AuthScreen> {
             .child('user_images')
             .child('${userCredentials.user!.uid}.jpg');
 
-        await storageRef.putFile(_selectedImage!);
-        final imageUrl = await storageRef.getDownloadURL();
+        // await storageRef.putFile(_selectedImage!);
+        // final imageUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredentials.user!.uid)
+            .set({
+          'username': _enteredUsername,
+          'email': _enteredEmail,
+          // 'image_url':  imageUrl,
+          'image_url': 'https://picsum.photos/250?image=9',
+        });
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {}
@@ -113,11 +125,30 @@ class _AuthScreenState extends State<AuthScreen> {
                                   !value.contains('@')) {
                                 return 'Please enter a valid email address';
                               }
+                              return null;
                             },
                             onSaved: (newValue) {
                               _enteredEmail = newValue!;
                             },
                           ),
+                          if (!_isLogin)
+                            TextFormField(
+                              initialValue: _enteredUsername,
+                              decoration:
+                                  const InputDecoration(labelText: 'Username'),
+                              enableSuggestions: false,
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.trim().length < 4) {
+                                  return 'Please enter at least 4 characters.';
+                                }
+                                return null;
+                              },
+                              onSaved: (newValue) {
+                                _enteredUsername = newValue!;
+                              },
+                            ),
                           TextFormField(
                             initialValue: _enteredPassword,
                             decoration: const InputDecoration(
@@ -128,6 +159,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (value == null || value.trim().length < 6) {
                                 return 'Password must be at least 6 characters long.';
                               }
+                              return null;
                             },
                             onSaved: (newValue) {
                               _enteredPassword = newValue!;
