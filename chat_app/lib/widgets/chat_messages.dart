@@ -35,6 +35,42 @@ class ChatMessages extends StatelessWidget {
         }
 
         final loadedMessages = snapshot.data!.docs;
+        // type message: 1 - 2 - 3
+        var types = List.generate(loadedMessages.length, (index) => 2);
+
+        for (var i = 0; i < loadedMessages.length; i++) {
+          final previousMessage =
+              i - 1 >= 0 ? loadedMessages[i - 1].data() : null;
+          final message = loadedMessages[i].data();
+          final nextMessage = i + 1 < loadedMessages.length
+              ? loadedMessages[i + 1].data()
+              : null;
+
+          // get message
+          final previous =
+              previousMessage != null ? previousMessage['userId'] : null;
+          final current = message['userId'];
+          final next = nextMessage != null ? nextMessage['userId'] : null;
+
+          // handle index
+          if (previous == null) {
+            if (next != null && current == next) {
+              types[i] = 1;
+            } else {
+              types[i] = 2;
+            }
+          } else if (next == null) {
+            types[i - 1] = 2;
+            types[i] = 3;
+          } else {
+            if (next != current) {
+              types[i + 1] = 1;
+              types[i] = 3;
+            }
+
+            if (previous != current && current != next) types[i] = 2;
+          }
+        }
 
         return ListView.builder(
           padding: const EdgeInsets.only(bottom: 40, left: 13, right: 13),
@@ -45,6 +81,7 @@ class ChatMessages extends StatelessWidget {
             final nextMessage = index + 1 < loadedMessages.length
                 ? loadedMessages[index + 1].data()
                 : null;
+
             final currentMessageUserId = message['userId'];
             final nextMessageUserId =
                 nextMessage != null ? nextMessage['userId'] : null;
@@ -53,12 +90,14 @@ class ChatMessages extends StatelessWidget {
             if (nextUserIsSame) {
               return MessageBubble.next(
                   message: message['text'],
+                  type: types[index],
                   isMe: authenticatedUser.uid == currentMessageUserId);
             } else {
               return MessageBubble.first(
                   userImage: message['userImage'],
                   username: message['username'],
                   message: message['text'],
+                  type: types[index],
                   isMe: authenticatedUser.uid == currentMessageUserId);
             }
           },

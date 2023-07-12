@@ -9,6 +9,7 @@ class MessageBubble extends StatelessWidget {
     required this.username,
     required this.message,
     required this.isMe,
+    required this.type,
   }) : isFirstInSequence = true;
 
   // Create a amessage bubble that continues the sequence.
@@ -16,6 +17,7 @@ class MessageBubble extends StatelessWidget {
     super.key,
     required this.message,
     required this.isMe,
+    required this.type,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
@@ -26,6 +28,9 @@ class MessageBubble extends StatelessWidget {
   // shows user image for the first message from the same user, and changes
   // the shape of the bubble for messages thereafter.
   final bool isFirstInSequence;
+
+  // the last message
+  final int type;
 
   // Image of the user to be displayed next to the bubble.
   // Not required if the message is not the first in a sequence.
@@ -93,21 +98,35 @@ class MessageBubble extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: isMe
-                          ? Colors.grey[300]
+                          ? Colors.blue[300]
                           : theme.colorScheme.secondary.withAlpha(200),
                       // Only show the message bubble's "speaking edge" if first in
                       // the chain.
                       // Whether the "speaking edge" is on the left or right depends
                       // on whether or not the message bubble is the current user.
+                      // borderRadius: BorderRadius.only(
+                      //   topLeft: !isMe && isFirstInSequence
+                      //       ? Radius.zero
+                      //       : const Radius.circular(12),
+                      //   topRight: isMe && isFirstInSequence
+                      //       ? Radius.zero
+                      //       : const Radius.circular(12),
+                      //   bottomLeft: const Radius.circular(12),
+                      //   bottomRight: const Radius.circular(12),
+                      // ),
                       borderRadius: BorderRadius.only(
-                        topLeft: !isMe && isFirstInSequence
+                        bottomLeft: !isMe && type == 3
                             ? Radius.zero
                             : const Radius.circular(12),
-                        topRight: isMe && isFirstInSequence
+                        bottomRight: isMe && type == 3
                             ? Radius.zero
                             : const Radius.circular(12),
-                        bottomLeft: const Radius.circular(12),
-                        bottomRight: const Radius.circular(12),
+                        topLeft: !isMe && type == 1
+                            ? Radius.zero
+                            : const Radius.circular(12),
+                        topRight: isMe && type == 1
+                            ? Radius.zero
+                            : const Radius.circular(12),
                       ),
                     ),
                     // Set some reasonable constraints on the width of the
@@ -120,7 +139,7 @@ class MessageBubble extends StatelessWidget {
                     ),
                     // Margin around the bubble.
                     margin: const EdgeInsets.symmetric(
-                      vertical: 4,
+                      vertical: 1,
                       horizontal: 12,
                     ),
                     child: Text(
@@ -129,9 +148,8 @@ class MessageBubble extends StatelessWidget {
                         // Add a little line spacing to make the text look nicer
                         // when multilined.
                         height: 1.3,
-                        color: isMe
-                            ? Colors.black87
-                            : theme.colorScheme.onSecondary,
+                        color:
+                            isMe ? Colors.white : theme.colorScheme.onSecondary,
                       ),
                       softWrap: true,
                     ),
