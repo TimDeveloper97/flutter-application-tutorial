@@ -2,6 +2,9 @@ import 'package:chat_app/widgets/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+final DateFormat formatter = DateFormat('hh:mm a');
 
 class ChatMessages extends StatelessWidget {
   const ChatMessages({super.key});
@@ -86,17 +89,22 @@ class ChatMessages extends StatelessWidget {
             final nextMessageUserId =
                 nextMessage != null ? nextMessage['userId'] : null;
             final nextUserIsSame = nextMessageUserId == currentMessageUserId;
+            final time = DateTime.fromMillisecondsSinceEpoch(
+                (message['createdAt'] as Timestamp).seconds);
+            final formatTime = formatter.format(time);
 
             if (nextUserIsSame) {
               return MessageBubble.next(
                   message: message['text'],
                   type: types[index],
+                  time: formatTime,
                   isMe: authenticatedUser.uid == currentMessageUserId);
             } else {
               return MessageBubble.first(
                   userImage: message['userImage'],
                   username: message['username'],
                   message: message['text'],
+                  time: formatTime,
                   type: types[index],
                   isMe: authenticatedUser.uid == currentMessageUserId);
             }
